@@ -30,9 +30,7 @@ while True:
     
     opcao = input("Escolha uma opção (1, 2, 3 ou 4): ").strip()
     
-    # -----------------------------------------
-    # OPÇÃO 4: PAINEL ADMIN (Nova Funcionalidade)
-    # -----------------------------------------
+    # OPÇÃO 4: PAINEL ADMIN
     if opcao == '4':
         print("\n--- Acesso Restrito: Painel Admin ---")
         senha_admin = input("Digite a senha do administrador: ")
@@ -50,7 +48,7 @@ while True:
                     print(f"{i}º - {nome}")
             print("====================================")
         else:
-            print("❌ Acesso Negado: Senha de administrador incorreta!")
+            print(" Acesso Negado: Senha de administrador incorreta!")
 
     # -----------------------------------------
     # OPÇÃO 3: SAIR
@@ -67,11 +65,11 @@ while True:
         novo_usuario = input("Digite um nome de usuário: ").strip().lower()
         
         if novo_usuario in banco_de_usuarios:
-            print("❌ Erro: Esse usuário já existe! Tente outro nome.")
+            print(" Erro: Esse usuário já existe! Tente outro nome.")
         else:
             nova_senha = gerar_senha_forte(16)
             banco_de_usuarios[novo_usuario] = nova_senha
-            print(f"✅ Conta criada com sucesso!")
+            print(f" Conta criada com sucesso!")
             print(f"Sua senha gerada automaticamente é: {nova_senha}")
             print("Guarde-a em um local seguro!")
 
@@ -85,13 +83,13 @@ while True:
         erros_atuais = registro_de_falhas.get(usuario, 0)
         
         if erros_atuais >= LIMITE_DE_ERROS:
-            print(f"🚨 ALERTA: A conta '{usuario}' está BLOQUEADA por excesso de tentativas!")
+            print(f" ALERTA: A conta '{usuario}' está BLOQUEADA por excesso de tentativas!")
             continue 
             
         senha = input("Digite a Senha: ")
         
         if usuario in banco_de_usuarios and banco_de_usuarios[usuario] == senha:
-            print(f"✅ Acesso Permitido. Bem-vindo(a), {usuario}!")
+            print(f" Acesso Permitido. Bem-vindo(a), {usuario}!")
             registro_de_falhas[usuario] = 0 
             
             # NOVA LINHA: Adiciona o nome de quem logou na nossa lista de histórico
@@ -101,12 +99,12 @@ while True:
             registro_de_falhas[usuario] = erros_atuais + 1
             tentativas_restantes = LIMITE_DE_ERROS - registro_de_falhas[usuario]
             
-            print("❌ Acesso Negado: Usuário ou senha incorretos.")
+            print(" Acesso Negado: Usuário ou senha incorretos.")
             
             if tentativas_restantes > 0:
-                print(f"⚠️ Você tem apenas mais {tentativas_restantes} tentativa(s).")
+                print(f" Você tem apenas mais {tentativas_restantes} tentativa(s).")
             else:
-                print(f"🔒 CONTA BLOQUEADA: Limite atingido para '{usuario}'.")
+                print(f" CONTA BLOQUEADA: Limite atingido para '{usuario}'.")
                 
     # -----------------------------------------
     # OPÇÃO INVÁLIDA
