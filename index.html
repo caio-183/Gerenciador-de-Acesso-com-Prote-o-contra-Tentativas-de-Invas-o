@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Integrado de Segurança</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        h2 {
+            text-align: center;
+            margin-top: 0;
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .nav button {
+            flex: 1;
+            margin: 0 5px;
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .nav button:hover {
+            background-color: #0056b3;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .btn-action {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn-action:hover {
+            background-color: #218838;
+        }
+        .msg {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+            text-align: center;
+        }
+        .msg.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .msg.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        ul { padding-left: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Sistema de Segurança</h2>
+    
+    <div class="nav">
+        <button onclick="mudarAba('login')">Login</button>
+        <button onclick="mudarAba('cadastro')">Criar Conta</button>
+        <button onclick="mudarAba('admin')">Admin</button>
+    </div>
+
+    <div id="mensagem" class="msg"></div>
+
+    <div id="sec-login" class="section active">
+        <label>Usuário:</label>
+        <input type="text" id="login-usuario" placeholder="Digite o Usuário">
+        <label>Senha:</label>
+        <input type="password" id="login-senha" placeholder="Digite a Senha">
+        <button class="btn-action" onclick="fazerLogin()">Entrar</button>
+    </div>
+
+    <div id="sec-cadastro" class="section">
+        <label>Novo Usuário:</label>
+        <input type="text" id="cad-usuario" placeholder="Digite um nome de usuário">
+        <button class="btn-action" onclick="criarConta()">Criar Conta</button>
+    </div>
+
+    <div id="sec-admin" class="section">
+        <label>Senha do Administrador:</label>
+        <input type="password" id="admin-senha" placeholder="Digite a senha do admin">
+        <button class="btn-action" onclick="acessarAdmin()">Acessar Painel</button>
+        
+        <div id="area-historico" style="display:none; margin-top: 20px;">
+            <h3>Últimos Logins</h3>
+            <ul id="lista-historico"></ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- VARIÁVEIS DO SISTEMA (Emulando o Python) ---
+    const banco_de_usuarios = {
+        "admin": "senha",
+        "caio": "caio123"
+    };
+    const registro_de_falhas = {};
+    const LIMITE_DE_ERROS = 2;
+    const historico_logins = [];
+
+    // --- FUNÇÕES UTILITÁRIAS ---
+    
+    // Mostra as mensagens na tela
+    function mostrarMensagem(texto, tipo) {
+        const msgDiv = document.getElementById('mensagem');
+        msgDiv.textContent = texto;
+        msgDiv.className = 'msg ' + tipo;
+        msgDiv.style.display = 'block';
+    }
+
+    // Esconde as mensagens
+    function limparMensagem() {
+        document.getElementById('mensagem').style.display = 'none';
+    }
+
+    // Alterna entre as abas (Menu do Python)
+    function mudarAba(aba) {
+        document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+        document.getElementById('sec-' + aba).classList.add('active');
+        limparMensagem();
+        document.getElementById('area-historico').style.display = 'none';
+    }
+
+    // Gera senha forte (Equivalente ao string e random do Python)
+    function gerarSenhaForte(tamanho = 16) {
+        const caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
+        let senha = "";
+        for (let i = 0; i < tamanho; i++) {
+            const randomIndex = Math.floor(Math.random() * caracteres.length);
+            senha += caracteres[randomIndex];
+        }
+        return senha;
+    }
+
+    // --- LÓGICA PRINCIPAL ---
+
+    // [1] FAZER LOGIN
+    function fazerLogin() {
+        limparMensagem();
+        const usuarioInput = document.getElementById('login-usuario').value.trim().toLowerCase();
+        const senhaInput = document.getElementById('login-senha').value;
+
+        if (!usuarioInput) {
+            mostrarMensagem("Por favor, digite um usuário.", "error");
+            return;
+        }
+
+        const erros_atuais = registro_de_falhas[usuarioInput] || 0;
+
+        if (erros_atuais >= LIMITE_DE_ERROS) {
+            mostrarMensagem(`ALERTA: A conta '${usuarioInput}' está BLOQUEADA por excesso de tentativas!`, "error");
+            return;
+        }
+
+        if (banco_de_usuarios[usuarioInput] && banco_de_usuarios[usuarioInput] === senhaInput) {
+            mostrarMensagem(`Acesso Permitido. Bem-vindo(a), ${usuarioInput}!`, "success");
+            registro_de_falhas[usuarioInput] = 0; // Reseta as falhas
+            historico_logins.push(usuarioInput); // Salva no histórico
+            
+            // Limpa os campos
+            document.getElementById('login-usuario').value = '';
+            document.getElementById('login-senha').value = '';
+        } else {
+            registro_de_falhas[usuarioInput] = erros_atuais + 1;
+            const tentativas_restantes = LIMITE_DE_ERROS - registro_de_falhas[usuarioInput];
+
+            if (tentativas_restantes > 0) {
+                mostrarMensagem(`Acesso Negado. Você tem apenas mais ${tentativas_restantes} tentativa(s).`, "error");
+            } else {
+                mostrarMensagem(`CONTA BLOQUEADA: Limite atingido para '${usuarioInput}'.`, "error");
+            }
+        }
+    }
+
+    // [2] CRIAR CONTA
+    function criarConta() {
+        limparMensagem();
+        const novoUsuario = document.getElementById('cad-usuario').value.trim().toLowerCase();
+
+        if (!novoUsuario) {
+            mostrarMensagem("Digite um nome de usuário válido.", "error");
+            return;
+        }
+
+        if (banco_de_usuarios[novoUsuario]) {
+            mostrarMensagem("Erro: Esse usuário já existe! Tente outro nome.", "error");
+        } else {
+            const novaSenha = gerarSenhaForte(16);
+            banco_de_usuarios[novoUsuario] = novaSenha; // Salva o usuário no banco (memória JS)
+            
+            mostrarMensagem(`Conta criada! Sua senha é: ${novaSenha} (Guarde-a com segurança!)`, "success");
+            document.getElementById('cad-usuario').value = '';
+        }
+    }
+
+    // [4] PAINEL ADMIN
+    function acessarAdmin() {
+        limparMensagem();
+        const senhaAdmin = document.getElementById('admin-senha').value;
+
+        if (banco_de_usuarios["admin"] === senhaAdmin) {
+            document.getElementById('area-historico').style.display = 'block';
+            const lista = document.getElementById('lista-historico');
+            lista.innerHTML = ''; // Limpa a lista antes de mostrar
+
+            if (historico_logins.length === 0) {
+                lista.innerHTML = "<li>Nenhum login registrado nesta sessão.</li>";
+            } else {
+                historico_logins.forEach((nome, index) => {
+                    const li = document.createElement('li');
+                    li.textContent = `${index + 1}º - ${nome}`;
+                    lista.appendChild(li);
+                });
+            }
+            mostrarMensagem("Acesso liberado ao painel admin.", "success");
+            document.getElementById('admin-senha').value = '';
+        } else {
+            mostrarMensagem("Acesso Negado: Senha de administrador incorreta!", "error");
+            document.getElementById('area-historico').style.display = 'none';
+        }
+    }
+</script>
+
+</body>
+</html>
