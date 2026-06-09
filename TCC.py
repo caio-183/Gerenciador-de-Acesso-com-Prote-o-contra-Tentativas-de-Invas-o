@@ -23,8 +23,8 @@ while True:
     print("\nO que você deseja fazer?")
     print("[1] Fazer Login")
     print("[2] Criar Nova Conta")
-    print("[3] Sair")
-    print("[4] Painel Admin (Histórico de Logins)")
+    print("[3] Painel Admin (Histórico de Logins)")
+    print("[4] Sair")
     
     opcao = input("Escolha uma opção (1, 2, 3 ou 4): ").strip()
     
@@ -71,13 +71,9 @@ while True:
             print(f"Sua senha gerada automaticamente é: {nova_senha}")
             print("Guarde-a em um local seguro!")
 
-    # OPÇÃO 3: SAIR
+    
+    # OPÇÃO 3: PAINEL ADMIN
     elif opcao == '3':
-        print("Encerrando o sistema. Até mais!")
-        break
-
-    # OPÇÃO 4: PAINEL ADMIN
-    elif opcao == '4':
         print("\n--- Acesso Restrito: Painel Admin ---")
         senha_admin = input("Digite a senha do administrador: ")
         
@@ -92,6 +88,12 @@ while True:
             print("====================================")
         else:
             print("  Acesso Negado: Senha de administrador incorreta!")
+
+    
+    # OPÇÃO 4: SAIR
+    elif opcao == '4':
+        print("Encerrando o sistema. Até mais!")
+        break
                 
     # OPÇÃO INVÁLIDA
     else:
