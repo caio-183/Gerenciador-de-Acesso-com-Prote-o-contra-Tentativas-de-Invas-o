@@ -3,134 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Integrado de Segurança</title>
+    <title>Sistema Integrado de Segurança e Motores</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            background-color: #f4f6f9;
             color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            min-height: 100vh;
+            padding: 20px;
         }
+
         .container {
             background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 400px;
+            max-width: 500px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
         }
-        h2 {
+
+        h1 {
+            font-size: 1.6rem;
             text-align: center;
-            margin-top: 0;
+            color: #1a365d;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
         }
-        .nav {
+
+        h2 {
+            font-size: 1.2rem;
+            color: #2b6cb0;
+            margin-bottom: 15px;
+        }
+
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        button {
+            background-color: #3182ce;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #2b6cb0;
+        }
+
+        button.secondary {
+            background-color: #718096;
+        }
+
+        button.secondary:hover {
+            background-color: #4a5568;
+        }
+
+        button.danger {
+            background-color: #e53e3e;
+        }
+
+        button.danger:hover {
+            background-color: #c53030;
+        }
+
+        .panel {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .output-msg {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            display: none;
+        }
+
+        .success { background-color: #c6f6d5; color: #22543d; display: block; }
+        .error { background-color: #fed7d7; color: #742a2a; display: block; }
+        .info { background-color: #ebf8ff; color: #2b6cb0; display: block; }
+
+        /* Estilos do Mercado */
+        .motor-item {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
-            margin-bottom: 20px;
+            align-items: center;
         }
-        .nav button {
-            flex: 1;
-            margin: 0 5px;
-            padding: 10px;
-            border: none;
-            background-color: #007bff;
-            color: white;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
+
+        .motor-info {
+            font-size: 0.9rem;
         }
-        .nav button:hover {
-            background-color: #0056b3;
-        }
-        .section {
-            display: none;
-        }
-        .section.active {
+
+        .motor-info strong {
             display: block;
+            color: #2d3748;
+            font-size: 0.95rem;
         }
-        label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 5px;
+
+        .btn-buy {
+            width: auto;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            background-color: #38a169;
         }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
+
+        .btn-buy:hover {
+            background-color: #2f855a;
         }
-        .btn-action {
-            width: 100%;
-            padding: 12px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
+
+        .log-list {
+            list-style: decimal inside;
+            margin-top: 10px;
         }
-        .btn-action:hover {
-            background-color: #218838;
+
+        .log-list li {
+            padding: 6px 0;
+            border-bottom: 1px dashed #e2e8f0;
         }
-        .msg {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 4px;
-            display: none;
-            text-align: center;
-        }
-        .msg.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .msg.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        ul { padding-left: 20px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Sistema de Segurança</h2>
-    
-    <div class="nav">
-        <button onclick="mudarAba('login')">Login</button>
-        <button onclick="mudarAba('cadastro')">Criar Conta</button>
-        <button onclick="mudarAba('admin')">Admin</button>
-    </div>
+    <h1>SISTEMA INTEGRADO DE SEGURANÇA</h1>
 
-    <div id="mensagem" class="msg"></div>
-
-    <div id="sec-login" class="section active">
-        <label>Usuário:</label>
-        <input type="text" id="login-usuario" placeholder="Digite o Usuário">
-        <label>Senha:</label>
-        <input type="password" id="login-senha" placeholder="Digite a Senha">
-        <button class="btn-action" onclick="fazerLogin()">Entrar</button>
-    </div>
-
-    <div id="sec-cadastro" class="section">
-        <label>Novo Usuário:</label>
-        <input type="text" id="cad-usuario" placeholder="Digite um nome de usuário">
-        <button class="btn-action" onclick="criarConta()">Criar Conta</button>
-    </div>
-
-    <div id="sec-admin" class="section">
-        <label>Senha do Administrador:</label>
-        <input type="password" id="admin-senha" placeholder="Digite a senha do admin">
-        <button class="btn-action" onclick="acessarAdmin()">Acessar Painel</button>
-        
-        <div id="area-historico" style="display:none; margin-top: 20px;">
-            <h3>Últimos Logins</h3>
-            <ul id="lista-historico"></ul>
+    <div id="menu-principal" class="panel active">
+        <p style="text-align: center; margin-bottom: 20px; color: #718096;">O que você deseja fazer?</p>
+        <div class="menu-buttons">
+            <button onclick="changePanel('painel-login')">[1] Fazer Login</button>
+            <button onclick="changePanel('painel-cadastro')">[2] Criar Nova Conta</button>
+            <button onclick="changePanel('painel-admin')">[3] Painel Admin (Histórico)</button>
         </div>
+    </div>
+
+    <div id="painel-login" class="panel">
+        <h2>--- Painel de Login ---</h2>
+        <div class="form-group">
+            <label>Usuário:</label>
+            <input type="text" id="login-usuario">
+        </div>
+        <div class="form-group">
+            <label>Senha:</label>
+            <input type="password" id="login-senha">
+        </div>
+        <button onclick="executarLogin()">Entrar</button>
+        <button class="secondary" style="margin-top: 10px;" onclick="voltarAoMenu()">Voltar</button>
+        <div id="msg-login" class="output-msg"></div>
+    </div>
+
+    <div id="painel-cadastro" class="panel">
+        <h2>--- Cadastro de Novo Usuário ---</h2>
+        <div class="form-group">
+            <label>Digite um nome de usuário:</label>
+            <input type="text" id="cadastro-usuario">
+        </div>
+        <button onclick="executarCadastro()">Criar Conta com Senha Forte</button>
+        <button class="secondary" style="margin-top: 10px;" onclick="voltarAoMenu()">Voltar</button>
+        <div id="msg-cadastro" class="output-msg"></div>
+    </div>
+
+    <div id="painel-admin" class="panel">
+        <h2>--- Acesso Restrito: Painel Admin ---</h2>
+        <div class="form-group" id="admin-auth-box">
+            <label>Digite a senha do administrador:</label>
+            <input type="password" id="admin-senha">
+            <button style="margin-top: 10px;" onclick="acessarAdmin()">Verificar Senha</button>
+        </div>
+        <div id="admin-conteudo" style="display: none;">
+            <h3>=== Últimos Logins Bem-sucedidos ===</h3>
+            <ol id="lista-logs" class="log-list"></ol>
+        </div>
+        <button class="secondary" style="margin-top: 15px;" onclick="voltarAoMenu()">Voltar</button>
+        <div id="msg-admin" class="output-msg"></div>
+    </div>
+
+    <div id="painel-mercado" class="panel">
+        <h2 id="titulo-mercado">🛒 MINI MERCADO DE MOTORES</h2>
+        <p style="margin-bottom: 15px; font-size: 0.9rem; color: #4a5568;">Confira nossos modelos disponíveis:</p>
+        
+        <div id="lista-motores"></div>
+
+        <button class="danger" style="margin-top: 20px;" onclick="deslogarMercado()">[5] Sair do Mercado (Deslogar)</button>
+        <div id="msg-mercado" class="output-msg"></div>
     </div>
 </div>
 
 <script>
-    // --- VARIÁVEIS DO SISTEMA (Emulando o Python) ---
+    // --- VARIÁVEIS DO SISTEMA (SIMULANDO O BANCO DE DADOS PYTHON) ---
     const banco_de_usuarios = {
         "admin": "senha",
         "caio": "caio123"
@@ -139,126 +245,187 @@
     const LIMITE_DE_ERROS = 2;
     const historico_logins = [];
 
-    // --- FUNÇÕES UTILITÁRIAS ---
-    
-    // Mostra as mensagens na tela
-    function mostrarMensagem(texto, tipo) {
-        const msgDiv = document.getElementById('mensagem');
-        msgDiv.textContent = texto;
-        msgDiv.className = 'msg ' + tipo;
-        msgDiv.style.display = 'block';
-    }
+    // CATÁLOGO DO MINI MERCADO DE MOTORES
+    const catalogo_motores = [
+        { modelo: "Motor Weg W22 Tradicional", potencia: "1 CV", preco: 850.00 },
+        { modelo: "Motor Weg W22 Alta Eficiência", potencia: "3 CV", preco: 1450.00 },
+        { modelo: "Motor Industrial Blindado", potencia: "5 CV", preco: 2200.00 },
+        { modelo: "Motor de Alta Rotação", potencia: "10 CV", preco: 4100.00 }
+    ];
 
-    // Esconde as mensagens
-    function limparMensagem() {
-        document.getElementById('mensagem').style.display = 'none';
-    }
+    let usuarioLogado = "";
 
-    // Alterna entre as abas (Menu do Python)
-    function mudarAba(aba) {
-        document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-        document.getElementById('sec-' + aba).classList.add('active');
-        limparMensagem();
-        document.getElementById('area-historico').style.display = 'none';
-    }
-
-    // Gera senha forte (Equivalente ao string e random do Python)
-    function gerarSenhaForte(tamanho = 16) {
-        const caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
-        let senha = "";
+    // FUNÇÃO GERADORA DE SENHA FORTE
+    function gerarSenhaForte(tamanho = 8) {
+        const letras = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const numeros = "0123456789";
+        const simbolos = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+        const caracteres = letras + numeros + simbolos;
+        
+        let senha_sorteada = "";
         for (let i = 0; i < tamanho; i++) {
-            const randomIndex = Math.floor(Math.random() * caracteres.length);
-            senha += caracteres[randomIndex];
+            const indice = Math.floor(Math.random() * caracteres.length);
+            senha_sorteada += caracteres.charAt(indice);
         }
-        return senha;
+        return senha_sorteada;
     }
 
-    // --- LÓGICA PRINCIPAL ---
+    // NAVEGAÇÃO ENTRE PAINÉIS
+    function changePanel(panelId) {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.getElementById(panelId).classList.add('active');
+        limparMensagens();
+    }
 
-    // [1] FAZER LOGIN
-    function fazerLogin() {
-        limparMensagem();
+    function voltarAoMenu() {
+        document.getElementById('admin-senha').value = "";
+        document.getElementById('admin-conteudo').style.display = "none";
+        document.getElementById('admin-auth-box').style.display = "block";
+        changePanel('menu-principal');
+    }
+
+    function limparMensagens() {
+        document.querySelectorAll('.output-msg').forEach(msg => {
+            msg.textContent = "";
+            msg.className = "output-msg";
+        });
+    }
+
+    // OPÇÃO 1: EXECUÇÃO DO LOGIN
+    function executarLogin() {
         const usuarioInput = document.getElementById('login-usuario').value.trim().toLowerCase();
         const senhaInput = document.getElementById('login-senha').value;
+        const msg = document.getElementById('msg-login');
 
-        if (!usuarioInput) {
-            mostrarMensagem("Por favor, digite um usuário.", "error");
+        if (!usuarioInput || !senhaInput) {
+            msg.textContent = "Preencha todos os campos!";
+            msg.className = "output-msg error";
             return;
         }
 
-        const erros_atuais = registro_de_falhas[usuarioInput] || 0;
+        let erros_atuais = registro_de_falhas[usuarioInput] || 0;
 
         if (erros_atuais >= LIMITE_DE_ERROS) {
-            mostrarMensagem(`ALERTA: A conta '${usuarioInput}' está BLOQUEADA por excesso de tentativas!`, "error");
+            msg.innerHTML = `⚠️ ALERTA: A conta '${usuarioInput}' está BLOQUEADA por excesso de tentativas!`;
+            msg.className = "output-msg error";
             return;
         }
 
-        if (banco_de_usuarios[usuarioInput] && banco_de_usuarios[usuarioInput] === senhaInput) {
-            mostrarMensagem(`Acesso Permitido. Bem-vindo(a), ${usuarioInput}!`, "success");
-            registro_de_falhas[usuarioInput] = 0; // Reseta as falhas
-            historico_logins.push(usuarioInput); // Salva no histórico
-            
-            // Limpa os campos
-            document.getElementById('login-usuario').value = '';
-            document.getElementById('login-senha').value = '';
+        if (banco_de_usuarios.hasOwnProperty(usuarioInput) && banco_de_usuarios[usuarioInput] === senhaInput) {
+            registro_de_falhas[usuarioInput] = 0;
+            historico_logins.push(usuarioInput);
+            usuarioLogado = usuarioInput;
+
+            // Limpa campos
+            document.getElementById('login-usuario').value = "";
+            document.getElementById('login-senha').value = "";
+
+            // Redireciona para o mercado
+            carregarMercado();
         } else {
-            registro_de_falhas[usuarioInput] = erros_atuais + 1;
-            const tentativas_restantes = LIMITE_DE_ERROS - registro_de_falhas[usuarioInput];
+            erros_atuais++;
+            registro_de_falhas[usuarioInput] = erros_atuais;
+            let tentativas_restantes = LIMITE_DE_ERROS - erros_atuais;
 
             if (tentativas_restantes > 0) {
-                mostrarMensagem(`Acesso Negado. Você tem apenas mais ${tentativas_restantes} tentativa(s).`, "error");
+                msg.textContent = `Acesso Negado: Usuário ou senha incorretos. Você tem apenas mais ${tentativas_restantes} tentativa(s).`;
+                msg.className = "output-msg error";
             } else {
-                mostrarMensagem(`CONTA BLOQUEADA: Limite atingido para '${usuarioInput}'.`, "error");
+                msg.textContent = `CONTA BLOQUEADA: Limite atingido para '${usuarioInput}'.`;
+                msg.className = "output-msg error";
             }
         }
     }
 
-    // [2] CRIAR CONTA
-    function criarConta() {
-        limparMensagem();
-        const novoUsuario = document.getElementById('cad-usuario').value.trim().toLowerCase();
+    // OPÇÃO 2: EXECUÇÃO DO CADASTRO
+    function executarCadastro() {
+        const novoUsuario = document.getElementById('cadastro-usuario').value.trim().toLowerCase();
+        const msg = document.getElementById('msg-cadastro');
 
         if (!novoUsuario) {
-            mostrarMensagem("Digite um nome de usuário válido.", "error");
+            msg.textContent = "Digite um nome de usuário válido!";
+            msg.className = "output-msg error";
             return;
         }
 
-        if (banco_de_usuarios[novoUsuario]) {
-            mostrarMensagem("Erro: Esse usuário já existe! Tente outro nome.", "error");
+        if (banco_de_usuarios.hasOwnProperty(novoUsuario)) {
+            msg.textContent = "Erro: Esse usuário já existe! Tente outro nome.";
+            msg.className = "output-msg error";
         } else {
-            const novaSenha = gerarSenhaForte(16);
-            banco_de_usuarios[novoUsuario] = novaSenha; // Salva o usuário no banco (memória JS)
-            
-            mostrarMensagem(`Conta criada! Sua senha é: ${novaSenha} (Guarde-a com segurança!)`, "success");
-            document.getElementById('cad-usuario').value = '';
+            const novaSenha = gerarSenhaForte(8);
+            banco_de_usuarios[novoUsuario] = novaSenha;
+
+            msg.innerHTML = `<strong>Conta criada com sucesso!</strong><br>
+                             Sua senha gerada é: <span style="font-family:monospace; font-weight:bold; background:#fff; padding:2px 5px;">${novaSenha}</span><br>
+                             Guarde-a em um local seguro!`;
+            msg.className = "output-msg success";
+            document.getElementById('cadastro-usuario').value = "";
         }
     }
 
-    // [4] PAINEL ADMIN
+    // OPÇÃO 3: ACESSO AO PAINEL ADMIN
     function acessarAdmin() {
-        limparMensagem();
         const senhaAdmin = document.getElementById('admin-senha').value;
+        const msg = document.getElementById('msg-admin');
+        const lista = document.getElementById('lista-logs');
 
         if (banco_de_usuarios["admin"] === senhaAdmin) {
-            document.getElementById('area-historico').style.display = 'block';
-            const lista = document.getElementById('lista-historico');
-            lista.innerHTML = ''; // Limpa a lista antes de mostrar
-
+            document.getElementById('admin-auth-box').style.display = "none";
+            document.getElementById('admin-conteudo').style.display = "block";
+            msg.className = "output-msg"; // oculta se houver erro antigo
+            
+            lista.innerHTML = "";
             if (historico_logins.length === 0) {
                 lista.innerHTML = "<li>Nenhum login registrado nesta sessão.</li>";
             } else {
-                historico_logins.forEach((nome, index) => {
-                    const li = document.createElement('li');
-                    li.textContent = `${index + 1}º - ${nome}`;
+                historico_logins.forEach(nome => {
+                    let li = document.createElement('li');
+                    li.textContent = nome;
                     lista.appendChild(li);
                 });
             }
-            mostrarMensagem("Acesso liberado ao painel admin.", "success");
-            document.getElementById('admin-senha').value = '';
         } else {
-            mostrarMensagem("Acesso Negado: Senha de administrador incorreta!", "error");
-            document.getElementById('area-historico').style.display = 'none';
+            msg.textContent = "Acesso Negado: Senha de administrador incorreta!";
+            msg.className = "output-msg error";
         }
+    }
+
+    // --- SISTEMA DO MINI MERCADO ---
+    function carregarMercado() {
+        changePanel('painel-mercado');
+        document.getElementById('titulo-mercado').textContent = `🛒 MINI MERCADO (Logado como: ${usuarioLogado})`;
+        
+        const containerMotores = document.getElementById('lista-motores');
+        containerMotores.innerHTML = "";
+
+        catalogo_motores.forEach((motor, index) => {
+            const div = document.createElement('div');
+            div.className = 'motor-item';
+            div.innerHTML = `
+                <div class="motor-info">
+                    <strong>${motor.modelo}</strong>
+                    Potência: ${motor.potencia} - R$ ${motor.preco.toFixed(2)}
+                </div>
+                <button class="btn-buy" onclick="comprarMotor(${index})">Comprar</button>
+            `;
+            containerMotores.appendChild(div);
+        });
+    }
+
+    function comprarMotor(index) {
+        const motor = catalogo_motores[index];
+        const msg = document.getElementById('msg-mercado');
+
+        msg.innerHTML = `<strong> COMPRA REALIZADA COM SUCESSO!</strong><br>
+                         📦 Produto: ${motor.modelo} de ${motor.potencia}<br>
+                         💰 Valor: R$ ${motor.preco.toFixed(2)} faturado para a conta de ${usuarioLogado}.`;
+        msg.className = "output-msg success";
+    }
+
+    function deslogarMercado() {
+        alert(`Saindo do mercado... Até logo, ${usuarioLogado}!`);
+        usuarioLogado = "";
+        voltarAoMenu();
     }
 </script>
 
